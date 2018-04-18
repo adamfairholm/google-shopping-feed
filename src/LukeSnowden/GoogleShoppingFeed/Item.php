@@ -303,6 +303,15 @@ class Item
     }
 
     /**
+     * @param $size_system
+     */
+    public function size_system($size_system)
+    {
+        $node = new Node('size_system');
+        $this->nodes['size_system'] = $node->value($size_system)->_namespace($this->namespace)->addCdata();
+    }
+
+    /**
      * @param $gender
      */
     public function gender($gender)
@@ -458,7 +467,7 @@ class Item
     protected function getGroupIdentifier()
     {
         if (!is_null($this->groupIdentifier)) {
-            return $this->groupIdentifier
+            return $this->groupIdentifier;
         }
 
         if( ! isset( $this->nodes['mpn'] ) && ! isset( $this->nodes['gtin'] ) ) {
