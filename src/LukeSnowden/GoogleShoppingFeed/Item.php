@@ -72,6 +72,12 @@ class Item
      */
     protected $namespace = 'http://base.google.com/ns/1.0';
 
+    /**
+     * Group Identifier
+     * @var string
+     */
+    protected $groupIdentifier = null;
+
     public function __construct($googleShoppingFeed)
     {
         $this->googleShoppingFeed = $googleShoppingFeed;
@@ -428,14 +434,37 @@ class Item
     }
 
     /**
+     * Set Group Identifier
+     *
+     * Set a custom group identifier.
+     *
+     * @param striong $identifier
+     */
+    public function setGroupIdentifier($identifier)
+    {
+        $this->groupIdentifier = $identifier;
+    }
+
+    /**
+     * Get Group Identifier
+     *
+     * Will use the custom group identifier
+     * if it exists, otherwise, it requires an mpn/gtin
+     * to generate the group string from.
+     *
      * @return string
      * @throws MissingIdentifierException
      */
     protected function getGroupIdentifier()
     {
+        if (!is_null($this->groupIdentifier)) {
+            return $this->groupIdentifier
+        }
+
         if( ! isset( $this->nodes['mpn'] ) && ! isset( $this->nodes['gtin'] ) ) {
             throw new MissingIdentifierException("Please define a GTIN or MPN value before creating a variant.");
         }
+
         if( isset( $this->nodes['mpn'] ) ) return $this->nodes['mpn']->get('value') . '_group';
         return $this->nodes['gtin']->get('value') . '_group';
     }
